@@ -56,7 +56,7 @@ Save `nimbus.csv` into your project folder on your computer. Then read it into a
 
 ```{r}
 #| label: read-nimbus
-nimbus <- read_csv("nimbus.csv")
+nimbus <- read_csv("data/nimbus.csv")
 ```
 
 Notice that the code above saves the output to an object named nimbus. You must save the output of `read_csv()` to an object if you wish to use it later. If you do not save the output, `read_csv()` will merely print the contents of the data set at the command line.
@@ -74,7 +74,7 @@ R will display tibbles in a much more sensible way. If the **tibble** package is
 
 `tibble` is a core member of the tidyverse. It is loaded every time you call `library(tidyverse)`. The tibble package includes the functions `tibble()` and `tribble()` for making tibbles from scratch, as well as `as_tibble()` and `as.data.frame()` for converting back and forth between tibbles and data frames.
 
-In almost every case, you can ignore whether or not you are working with tibbles or data frames, but occasioannly a function might require one or the other (you will get an error that indicates that).
+In almost every case, you can ignore whether or not you are working with tibbles or data frames, but occasionally a function might require one or the other (you will get an error that indicates that).
 
 ## Parsing NA's
 
@@ -85,7 +85,7 @@ If you'd like R to treat these `.` values as missing values (and you should) you
 ## Your Turn 2
 ```{r}
 #| label: read-nimbis-correct-na
-nimbus <- read_csv("nimbus.csv")
+nimbus <- read_csv("data/nimbus.csv", na =".")
 ```
 
 You can set `na` to a single character string or a vector (e.g. c(NA, "."
@@ -103,9 +103,9 @@ To do this, add the argument `col_types` to `read_csv()` and set it equal to a l
 ## Your Turn 3
 ```{r}
 #| label: read-nimbus-set-types
-nimbus <- read_csv("nimbus.csv", na = ".",
-                   col_types = list(ozone = ____________,
-                                    date = _____________)
+nimbus <- read_csv("data/nimbus.csv", na = ".",
+                   col_types = list(ozone = col_double(),
+                                    date = col_datetime()))
 ```
 
 To complete the code, set `ozone` equal to one of the functions below, each function instructs `read_csv()` to parse `ozone` as a specific type of data.
@@ -199,7 +199,9 @@ To use a write function, first give it the name of the data frame to save, then 
 
 ```{r}
 #| label: write-csv
-write_csv(______, file = "________.csv")
+write_csv(nimbus, file = "data/clean/nimbus_clean.csv")
+
+clean_nimbus <- read_csv("data/clean/nimbus_clean.csv")
 ```
 
 
@@ -213,7 +215,9 @@ Look at the data for salaries, ages, and percent free throws/3 pointers for the 
 
 ```{r}
 #| label: load-gsw
-gsw <- read_csv("GSWdata.csv")
+gsw <- read_csv("data/GSWdata.csv", na = "N/A",
+                col_types = list('2019-20'=col_skip(), '2020-21' = col_number(),
+                                 'FG%' = col_number(), '3P%' = col_number()))
 ```
 
 
@@ -226,7 +230,7 @@ The `janitor` package can help you clean up the names of your variables to make 
 #install.packages("janitor")
 gsw <- janitor::clean_names(gsw)
 
-write_csv(_______, file = "________.csv")
+write_csv(gsw, file ="data/clean/gsw_clean.csv")
 ```
 
 
@@ -248,7 +252,7 @@ Let's use the built-in dataset `airquality`. First plot using `geom_point()`. No
 ggplot(data = airquality,
        mapping = aes(x = Ozone,
                      y = Solar.R)) +
- geom_point()
+ geom_miss_point()
 ```
 
 
